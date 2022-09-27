@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/4dc814c425.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script defer src="chat.js"></script>
+
+    <link href="dist/output.css" rel="stylesheet" />
+    <link href="https://vjs.zencdn.net/7.20.2/video-js.css" rel="stylesheet" />
+    <link
+      href="https://unpkg.com/@videojs/themes@1/dist/sea/index.css"
+      rel="stylesheet"
+    />
+    <title>VarjoSivu</title>
+    <style>
+      /* Change all text and icon colors in the player. */
+      .vjs-matrix.video-js {
+        color: #990506;
+      }
+
+      /* Change the border of the big play button. */
+      .vjs-matrix .vjs-big-play-button,
+      .video-js .vjs-big-play-button:focus {
+        border: #990506 1px solid !important;
+        background-color: black;
+      }
+
+      /* Change the color of various "bars". */
+      .vjs-matrix .vjs-volume-level,
+      .vjs-matrix .vjs-play-progress,
+      .vjs-matrix .vjs-slider-bar,
+      .vjs-load-progress {
+        background: #990506;
+      }
+      .vjs-play-progress,
+      .vjs-button:hover {
+        background-color: #990506 !important;
+        color: #990506 !important;
+      }
+      .vjs-theme-sea
+        .vjs-progress-control
+        .vjs-mouse-display
+        .vjs-time-tooltip {
+        color: #990506 !important;
+      }
+      .vjs-theme-sea .vjs-progress-control .vjs-time-tooltip {
+        /* background-color: rgba(65,118,188,.5); */
+        color: #990506;
+        background-color: hsla(0, 0%, 100%, 0.7);
+      }
+    </style>
+  </head>
+
+  <body class="bg-gm-star-command-blue relative min-h-screen w-full">
+    <nav class="flex relative w-full bg-gm-raisin-black text-white p-5">
+      <div class="tems-center text-4xl hidden xl:flex">
+        MAHDOLLISUUKSIEN MAISEMIA
+      </div>
+      <ul class="flex items-center absolute inset-y-0 right-0 mr-4">
+        <li class="ml-5 text-3xl">Etusivu</li>
+        <li class="ml-5 text-3xl">Ajankohtaista</li>
+        <li class="ml-5 text-3xl">Ohjelma</li>
+        <li class="ml-5 text-3xl">Yhteystiedot</li>
+      </ul>
+    </nav>
+    <main class="w-full pb-14">
+      <div class="">
+        <img src="media/7236701.jpg" class="w-full h-128 object-cover" />
+      </div>
+
+      <div
+        class="flex mt-6 mb-6 w-full flex-col items-center xl:flex-row xl:justify-center xl:items-start"
+      >
+        <div class="p-1 w-full lg:w-[1000px] xl:ml-3">
+          <h2 class="text-white text-3xl pb-2">
+            Mahdollisuuksien maisemia - Tapahtuma
+          </h2>
+          <div class="w-full">
+            <video
+              id="my-video"
+              class="video-js vjs-theme-sea vjs-matrix vjs-play-progress"
+            >
+              <!-- <source src=http://195.148.104.124:1935/jakelu/heippa/playlist.m3u8
+      type="application/x-mpegURL" /> -->
+              <source src="media/stream.mp4" type="video/mp4" />
+              <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider
+                upgrading to a web browser that
+                <a
+                  href="https://videojs.com/html5-video-support/"
+                  target="_blank"
+                  >supports HTML5 video</a
+                >
+              </p>
+            </video>
+          </div>
+        </div>
+        <div class="max-w-96 p-3 lg:ml-1">
+          <div class="flex flex-col items-center">
+            <h2 class="text-white text-3xl pb-2">Osallistu keskusteluun</h2>
+            <button
+              class="bg-gm-dark-red text-white font-bold py-2 px-4 rounded w-fit mb-2"
+              id="chat-button"
+            >
+              Avaa Chat
+            </button>
+          </div>
+
+          <div class="hidden" id="chat">
+            <div class="w-full">
+              <div class="p-3 flex bg-gm-indigo-dye w-full">
+                <form id="join" class="w-72">
+                  <input class="p-1" type="text" id="username" />
+                  <button
+                    class="text-white bg-gm-dark-red pl-1 pr-1"
+                    type="submit"
+                  >
+                    Username
+                  </button>
+                </form>
+
+                <!-- <form id="join-room" class="hidden">
+                  <input class="p-1" type="text" id="r" />
+                  <button
+                    class="text-white bg-gm-dark-red pl-1 pr-1"
+                    type="submit"
+                  >
+                    Join Room
+                  </button>
+                </form> -->
+              </div>
+
+              <ul
+                id="messages"
+                class="bg-gm-raisin-black w-full h-80 p-3 overflow-auto pb-12"
+              ></ul>
+            </div>
+            <div class="p-3 flex bg-gm-indigo-dye w-full">
+              <form id="msg-input" class="flex">
+                <input class="p-1 w-64" type="text" id="m" />
+                <button
+                  class="text-white bg-gm-dark-red ml-2 p-1"
+                  type="submit"
+                >
+                  <img src="media/icons8-email-send-24.png" />
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m-auto bg-gm-raisin-black rounded-md max-w-128 p-6 text-white"
+      >
+        Luova toiminta, itsensä ilmaiseminen, kulttuurinen toimijuus ja
+        taidekokemukset lisäävät osallisuutta ja hyvinvointia ja ovat siksi
+        tärkeä osa yksilön merkityksellistä elämää ja koko yhteiskuntaa. Viime
+        vuosina aiheesta on saatu paljon tutkimustietoa. Mitä voimme viedä
+        tutkimuksesta käytäntöön?
+      </div>
+    </main>
+    <footer class="w-screen">
+      <div class="bg-gm-dark-red h-12 absolute bottom-0 w-full"></div>
+    </footer>
+    <!-- <h1 class="text-3xl font-bold underline text-blue-400 hover:text-green-600">
+        Hello world!
+    </h1>
+    <h2>Head 2</h2>
+    <h3>Head 3</h3>
+    <div class="bg-gm-blood-red text-white font-bold py-2 px-4 rounded w-fit">Nappula</div>
+    <div class="btn-blue">Nappula</div> -->
+    <script src="https://vjs.zencdn.net/7.20.2/video.min.js"></script>
+    <script>
+      let myPlayer = document.querySelector(".video-js");
+      console.log(myPlayer);
+
+      videojs(myPlayer, {
+        controls: true,
+        autoplay: false,
+        preload: "auto",
+        fluid: true,
+        poster: "media/cartoon-drawing-colorful-wallpaper-preview.jpg",
+        // aspectRatio: "16:9",
+      });
+    </script>
+  </body>
+</html>
